@@ -3,18 +3,15 @@
 # ddev-db-mssql <!-- omit in toc -->
 
 * [What is ddev-db-mssql?](#what-is-ddev-db-mssql)
+* [Thanks to](#thanks-to)
 * [Components of the repository](#components-of-the-repository)
 * [Getting started](#getting-started)
 
 ## What is ddev-db-mssql?
 
-This repository is a template for providing [DDEV](https://ddev.readthedocs.io) add-ons and services.
+This repository provide [DDEV](https://ddev.readthedocs.io) add-on for a Microsoft SQL Server 2019 db.
 
-In DDEV addons can be installed from the command line using the `ddev get` command, for example, `ddev get ddev/ddev-db-mssql` or `ddev get ddev/ddev-drupal9-solr`.
-
-A repository like this one is the way to get started. You can create a new repo from this one by clicking the template button in the top right corner of the page.
-
-![template button](images/template-button.png)
+In DDEV addons can be installed from the command line using the `ddev get` command, for example, `ddev get ddev/ddev-db-mssql`.
 
 ## Thanks to
 
@@ -23,33 +20,78 @@ A repository like this one is the way to get started. You can create a new repo 
 
 ## Components of the repository
 
-* The fundamental contents of the add-on service or other component. For example, in this template there is a [docker-compose.db-mssql.yaml](docker-compose.db-mssql.yaml) file.
-* An [install.yaml](install.yaml) file that describes how to install the service or other component.
-* A test suite in [test.bats](tests/test.bats) that makes sure the service continues to work as expected.
-* [Github actions setup](.github/workflows/tests.yml) so that the tests run automatically when you push to the repository.
+this repo provide a:
+* [docker-compose.db-mssql.yaml](docker-compose.db-mssql.yaml) service based on `mcr.microsoft.com/mssql/server:2019-latest`
+* web-build updated configuration adding `sqlsrv` and `pdo_sqlsrv` to the default PHP config (see [Dockerfile.mssql](web-build/Dockerfile.mssql) and [install_sqlsrv.sh](web-build/install_sqlsrv.sh))
 
 ## Getting started
 
-1. Choose a good descriptive name for your add-on. It should probably start with "ddev-" and include the basic service or functionality. If it's particular to a specific CMS, perhaps `ddev-<CMS>-servicename`.
-2. Create the new template repository by using the template button.
-3. Globally replace "db-mssql" with the name of your add-on.
-4. Add the files that need to be added to a ddev project to the repository. For example, you might remove `docker-compose.db-mssql.yaml` with the `docker-compose.*.yaml` for your recipe.
-5. Update the install.yaml to give the necessary instructions for installing the add-on.
+1. add the add-on to your [DDEV](https://ddev.readthedocs.io) project using `ddev get ddev/ddev-db-mssql`
+2. restart with `ddev restart`
+3. please wait for the build of the updated `web-build`
+4. add a simple test PHP like the MS provided for [installation test](https://learn.microsoft.com/it-it/sql/connect/php/installation-tutorial-linux-mac?view=sql-server-ver16#testing-your-installation) replacing the `${DDEV_SITENAME}` from your project
 
-   * The fundamental line is the `project_files` directive, a list of files to be copied from this repo into the project `.ddev` directory.
-   * You can optionally add files to the `global_files` directive as well, which will cause files to be placed in the global `.ddev` directory, `~/.ddev`.
-   * Finally, `pre_install_commands` and `post_install_commands` are supported. These can use the host-side environment variables documented [in ddev docs](https://ddev.readthedocs.io/en/stable/users/extend/custom-commands/#environment-variables-provided).
+```php
+<?php
+$serverName = "ddev-DDEV_SITENAME-db-mssql"; # ddev-${DDEV_SITENAME}-db-mssql
+$connectionOptions = array(
+    "database" => "master",
+    "uid" => "sa",
+    "pwd" => "belloQuesto100",
+    "Encrypt" => false,
+    "TrustServerCertificate"=>false
+);
 
-6. Update `tests/test.bats` to provide a reasonable test for your repository. Tests are triggered either by manually executing `bats ./tests/test.bat`, automatically on every push to the repository, or periodically each night. Please make sure to attend to test failures when they happen. Others will be depending on you. `bats` is a simple testing framework that just uses `bash`. To run a Bats test locally, you have to [install bats-core](https://bats-core.readthedocs.io/en/stable/installation.html) first. Then you download your add-on, and finally run `bats ./tests/test.bats` within the root of the uncompressed directory. To learn more about Bats see the [documentation](https://bats-core.readthedocs.io/en/stable/).
-7. When everything is working, including the tests, you can push the repository to GitHub.
-8. Create a release on GitHub.
-9. Test manually with `ddev get <owner/repo>`.
-10. You can test PRs with `ddev get https://github.com/<user>/<repo>/tarball/<branch>`
-11. Update the README.md to describe the add-on, how to use it, and how to contribute. If there are any manual actions that have to be taken, please explain them. If it requires special configuration of the using project, please explain how to do those. Examples in [ddev/ddev-drupal9-solr](https://github.com/ddev/ddev-drupal9-solr), [ddev/ddev-memcached](github.com/ddev/ddev-memcached), and [ddev/ddev-beanstalkd](https://github.com/ddev/ddev-beanstalkd).
-12. Add a good short description to your repo, and add the label "ddev-get". It will immediately be added to the list provided by `ddev get --list --all`.
-13. When it has matured you will hopefully want to have it become an "official" maintained add-on. Open an issue in the [ddev queue](https://github.com/ddev/ddev/issues) for that.
+function exception_handler($exception) {
+    echo "<h1>Failure</h1>";
+    echo "Uncaught exception: " , $exception->getMessage();
+    echo "<h1>PHP Info for troubleshooting</h1>";
+    phpinfo();
+}
 
-Note that more advanced techniques are discussed in [DDEV docs](https://ddev.readthedocs.io/en/latest/users/extend/additional-services/#additional-service-configurations-and-add-ons-for-ddev).
+set_exception_handler('exception_handler');
+
+// Establishes the connection
+$conn = sqlsrv_connect($serverName, $connectionOptions);
+if ($conn === false) {
+    die(formatErrors(sqlsrv_errors()));
+}
+
+// Select Query
+$tsql = "SELECT @@Version AS SQL_VERSION";
+
+// Executes the query
+$stmt = sqlsrv_query($conn, $tsql);
+
+// Error handling
+if ($stmt === false) {
+    die(formatErrors(sqlsrv_errors()));
+}
+?>
+
+<h1> Success Results : </h1>
+
+<?php
+while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+    echo $row['SQL_VERSION'] . PHP_EOL;
+}
+
+sqlsrv_free_stmt($stmt);
+sqlsrv_close($conn);
+
+function formatErrors($errors)
+{
+    // Display errors
+    echo "<h1>SQL Error:</h1>";
+    echo "Error information: <br/>";
+    foreach ($errors as $error) {
+        echo "SQLSTATE: ". $error['SQLSTATE'] . "<br/>";
+        echo "Code: ". $error['code'] . "<br/>";
+        echo "Message: ". $error['message'] . "<br/>";
+    }
+}
+?>
+```
 
 **Contributed and maintained by [@CONTRIBUTOR](https://github.com/CONTRIBUTOR) based on the original [ddev-contrib recipe](https://github.com/ddev/ddev-contrib/tree/master/docker-compose-services/RECIPE) by [@CONTRIBUTOR](https://github.com/CONTRIBUTOR)**
 
