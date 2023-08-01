@@ -30,6 +30,7 @@ this repo provide a:
 2. restart with `ddev restart`
 3. please wait for the build of the updated `web-build`
 4. add a simple test PHP like the MS provided for [installation test](https://learn.microsoft.com/it-it/sql/connect/php/installation-tutorial-linux-mac?view=sql-server-ver16#testing-your-installation) replacing the `${DDEV_SITENAME}` from your project
+5. add `omit_containers: [db]` to your [.ddev/install.yaml](.ddev/install.yaml)
 
 ```php
 <?php
