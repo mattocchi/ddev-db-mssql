@@ -29,8 +29,8 @@ this repo provide a:
 1. add the add-on to your [DDEV](https://ddev.readthedocs.io) project using `ddev get ddev/ddev-db-mssql`
 2. restart with `ddev restart`
 3. please wait for the build of the updated `web-build`
-4. add a simple test PHP like the MS provided for [installation test](https://learn.microsoft.com/it-it/sql/connect/php/installation-tutorial-linux-mac?view=sql-server-ver16#testing-your-installation) replacing the `${DDEV_SITENAME}` from your project
-5. add `omit_containers: [db]` to your [.ddev/install.yaml](.ddev/install.yaml)
+4. add a simple test PHP like the MS provided for [Testing Your Installation](https://learn.microsoft.com/en-us/sql/connect/php/installation-tutorial-linux-mac?view=sql-server-ver16) replacing the `${DDEV_SITENAME}` from your project
+5. add `omit_containers: [db]` to your [.ddev/install.yaml](.ddev/install.yaml) to omit the default db instance
 
 ```php
 <?php
