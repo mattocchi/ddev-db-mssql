@@ -13,6 +13,8 @@ This repository provide [DDEV](https://ddev.readthedocs.io) add-on for a Microso
 
 In DDEV addons can be installed from the command line using the `ddev get` command, for example, `ddev get ddev/ddev-db-mssql`.
 
+This addon include [mssql-scripter](https://github.com/microsoft/mssql-scripter)
+
 ## Thanks to
 
 * this discussion for a good base configuration [How to install the SQL Server PHP drivers in DDEV-Local](https://stackoverflow.com/questions/58086933/how-to-install-the-sql-server-php-drivers-in-ddev-local)
@@ -94,6 +96,12 @@ function formatErrors($errors)
 ?>
 ```
 
-**Contributed and maintained by [@CONTRIBUTOR](https://github.com/CONTRIBUTOR) based on the original [ddev-contrib recipe](https://github.com/ddev/ddev-contrib/tree/master/docker-compose-services/RECIPE) by [@CONTRIBUTOR](https://github.com/CONTRIBUTOR)**
+### Use of mssql-scripter
 
-**Originally Contributed by [somebody](https://github.com/somebody) in <https://github.com/ddev/ddev-contrib/>
+You can use `mssql-scripter` as `DDEV` custom command like
+
+```bash
+ddev mssql-scripter -S db-mssql -U sa -P belloQuesto100 -d master > master.sql
+```
+
+**Contributed and maintained by [@mattocchi](https://github.com/mattocchi) based on the original [ddev-contrib recipe](https://github.com/ddev/ddev-contrib/tree/master/docker-compose-services) by [@ddev](https://github.com/ddev)**
