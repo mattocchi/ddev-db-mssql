@@ -16,5 +16,29 @@ services:
       com.ddev.site-name: ${DDEV_SITENAME}
       com.ddev.approot: $DDEV_APPROOT
 
+    # https://github.com/ddev/ddev-contrib/tree/master/docker-compose-services/sqlsrv
+    # volumes:
+    #   - mssqldata:/var/opt/mssql/
+
+  # mssql-scripter:
+  #   container_name: ddev-${DDEV_SITENAME}-db-mssql-scripter
+  #   build: 
+  #     context: .
+  #     dockerfile: Dockerfile.mssql-scripter
+  #   command: -h
+  #   networks: [default, ddev_default]
+  #   restart: "no"
+  #   # These labels ensure this service is discoverable by ddev.
+  #   labels:
+  #     com.ddev.site-name: ${DDEV_SITENAME}
+  #     com.ddev.approot: $DDEV_APPROOT
+  #   healthcheck:
+  #     disable: true
+
+    # web:
+    #   links:
+    #   - db-mssql:db-mssql
+
     volumes:
     - ".:/mnt/ddev_config"
+    # -  mssqldata:

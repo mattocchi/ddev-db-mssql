@@ -58,6 +58,8 @@ pre_install_actions:
 project_files:
 - docker-compose.db-mssql.yaml
 - web-build/
+# - Dockerfile.mssql-scripter
+- commands/
 # - somefile.sh
 
 # List of files and directories that are copied into the global .ddev directory

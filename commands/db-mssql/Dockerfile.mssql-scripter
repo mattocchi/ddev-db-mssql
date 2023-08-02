@@ -1,0 +1,20 @@
+FROM ubuntu:18.04
+
+RUN apt-get update && apt-get install -y \
+  python3-pip \
+  libssl1.0.0 \
+  && rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install --upgrade pip && \
+    pip install mssql-scripter
+    
+#RUN echo "alias python=python3" >> ~/.bashrc
+
+RUN ln -s python3 /usr/bin/python
+
+WORKDIR /app
+VOLUME /app
+
+ENTRYPOINT ["mssql-scripter"]
+
+# sudo ln -s python3 /usr/bin/python
