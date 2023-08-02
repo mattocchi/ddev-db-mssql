@@ -1,5 +1,0 @@
-#!/bin/sh
-
-set -e
-
-docker build -t mssql-scripter . && docker run --rm -it mssql-scripter "$@"

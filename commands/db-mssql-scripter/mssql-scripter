@@ -1,0 +1,7 @@
+#!/bin/sh
+
+set -e
+
+# docker run --rm -it mssql-scripter "$@"
+
+mssql-scripter "$@"
