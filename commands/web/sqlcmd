@@ -1,0 +1,5 @@
+#!/bin/sh
+
+set -e
+
+/opt/mssql-tools18/bin/sqlcmd "$@"
