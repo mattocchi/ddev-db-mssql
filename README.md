@@ -13,7 +13,9 @@ This repository provide [DDEV](https://ddev.readthedocs.io) add-on for a Microso
 
 In DDEV addons can be installed from the command line using the `ddev get` command, for example, `ddev get ddev/ddev-db-mssql`.
 
-This addon include [mssql-scripter](https://github.com/microsoft/mssql-scripter)
+This addon include two custom commands:
+* [mssql-scripter](https://github.com/microsoft/mssql-scripter)
+* [sqlcmd](https://learn.microsoft.com/en-us/sql/linux/quickstart-install-connect-docker?view=sql-server-ver16&pivots=cs1-bash#create-and-query-data) directly on DDEV service `web`
 
 ## Thanks to
 
