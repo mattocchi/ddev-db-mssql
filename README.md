@@ -11,7 +11,19 @@
 
 This repository provide [DDEV](https://ddev.readthedocs.io) add-on for a Microsoft SQL Server 2019 db.
 
-In DDEV addons can be installed from the command line using the `ddev get` command, for example, `ddev get ddev/ddev-db-mssql`.
+In DDEV addons can be installed from the command line.
+
+For DDEV v1.23.5 or above run
+
+```sh
+ddev add-on get ddev/ddev-db-mssql
+```
+
+For earlier versions of DDEV run
+
+```sh
+ddev get ddev/ddev-db-mssql
+```
 
 ## Thanks to
 
@@ -26,7 +38,7 @@ this repo provide a:
 
 ## Getting started
 
-1. add the add-on to your [DDEV](https://ddev.readthedocs.io) project using `ddev get ddev/ddev-db-mssql`
+1. add the add-on to your [DDEV](https://ddev.readthedocs.io) project using `ddev add-on get ddev/ddev-db-mssql` (or `ddev get ddev/ddev-db-mssql` for older versions of DDEV)
 2. restart with `ddev restart`
 3. please wait for the build of the updated `web-build`
 4. add a simple test PHP like the MS provided for [Testing Your Installation](https://learn.microsoft.com/en-us/sql/connect/php/installation-tutorial-linux-mac?view=sql-server-ver16) replacing the `${DDEV_SITENAME}` from your project
